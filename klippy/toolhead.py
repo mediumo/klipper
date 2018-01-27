@@ -195,7 +195,8 @@ class ToolHead:
             'junction_deviation', 0.02, minval=0.)
         self.move_queue = MoveQueue()
         self.commanded_pos = [0., 0., 0., 0.]
-        # Print time tracking
+        self.unsafe_movements = False
+	# Print time tracking
         self.buffer_time_low = config.getfloat(
             'buffer_time_low', 1.000, above=0.)
         self.buffer_time_high = config.getfloat(
@@ -321,7 +322,7 @@ class ToolHead:
         move = Move(self, self.commanded_pos, newpos, speed)
         if not move.move_d:
             return
-        if move.is_kinematic_move:
+        if move.is_kinematic_move and not self.unsafe_movements:
             self.kin.check_move(move)
         if move.axes_d[3]:
             self.extruder.check_move(move)

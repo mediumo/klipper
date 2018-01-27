@@ -340,7 +340,7 @@ class GCodeParser:
         'G20', 'M82', 'M83', 'G90', 'G91', 'G92', 'M206', 'M220', 'M221',
         'M105', 'M104', 'M109', 'M140', 'M190', 'M106', 'M107',
         'M112', 'M114', 'M115', 'IGNORE', 'QUERY_ENDSTOPS', 'PID_TUNE',
-        'RESTART', 'FIRMWARE_RESTART', 'ECHO', 'STATUS', 'HELP']
+        'RESTART', 'FIRMWARE_RESTART', 'ECHO', 'STATUS', 'HELP','ALLOW_UNSAFE_MOVES', 'FORBID_UNSAFE_MOVES']
     # G-Code movement commands
     cmd_G1_aliases = ['G0']
     def cmd_G1(self, params):
@@ -561,3 +561,7 @@ class GCodeParser:
             if cmd in self.gcode_help:
                 cmdhelp.append("%-10s: %s" % (cmd, self.gcode_help[cmd]))
         self.respond_info("\n".join(cmdhelp))
+    def cmd_FORBID_UNSAFE_MOVES(self, params):
+        self.toolhead.unsafe_movements = False
+    def cmd_ALLOW_UNSAFE_MOVES(self, params):
+        self.toolhead.unsafe_movements = True
